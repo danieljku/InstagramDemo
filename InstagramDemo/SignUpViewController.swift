@@ -15,12 +15,23 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var confirmPassword: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var username: UITextField!
+    @IBOutlet weak var profilePhoto: UIImageView!
     
+    var photoTakingHelper: PhotoHelper?
+    let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
 
         signUpButton.layer.cornerRadius = 4
+        
+        let photoTap = UITapGestureRecognizer()
+        photoTap.addTarget(self, action: #selector(SignUpViewController.tappedImage))
+        profilePhoto.addGestureRecognizer(photoTap)
+        profilePhoto.isUserInteractionEnabled = true
         // Do any additional setup after loading the view.
     }
 
@@ -29,8 +40,40 @@ class SignUpViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func tappedImage(){
+        takePhoto()
+    }
+    
     @IBAction func onSignUp(_ sender: Any) {
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        self.view.addSubview(activityView)
+
+        
         let newUser = PFUser()
+        
+        if let name = fullName.text{
+            newUser["name"] = name
+        }else{
+            //alert
+        }
+        
+        if let username = username.text{
+            newUser["nickname"] = username
+        }else{
+            //alert
+        }
+        
+        if let image = profilePhoto.image{
+            if let imageData = UIImageJPEGRepresentation(image, 0.8) {
+                newUser["profile_photo"] = PFFile(name: "profile.png", data: imageData)
+            }
+        }else{
+            if let imageData = UIImageJPEGRepresentation(#imageLiteral(resourceName: "profiledefault"), 0.8) {
+                newUser["profile_photo"] = PFFile(name: "profile.png", data: imageData)
+            }
+            profilePhoto.image = #imageLiteral(resourceName: "profiledefault")
+        }
         
         if let email = emailAddress.text{
             newUser.username = email
@@ -47,23 +90,26 @@ class SignUpViewController: UIViewController {
         if confirmPassword.text != password.text{
             //alert
         }
-        
-        if let name = fullName.text{
-            newUser["name"] = name
-        }else{
-            //alert
-        }
 
         newUser.signUpInBackground(block: { (success: Bool, error: Error?) in
             if error == nil{
                 //success
                 let instagramVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBarVC") as! UITabBarController
-                self.present(instagramVC, animated: true, completion: nil)
+                    self.present(instagramVC, animated: false, completion: nil)
+                    self.activityView.stopAnimating()
             }else{
                 print(error!.localizedDescription)
             }
         })
     }
 
-
+    @IBAction func onCancel(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func takePhoto(){
+        photoTakingHelper = PhotoHelper(viewController: self, callback: { (image: UIImage?) in
+            self.profilePhoto.image = image
+        })
+    }
 }

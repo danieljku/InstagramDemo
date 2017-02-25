@@ -16,7 +16,8 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.hideKeyboardWhenTappedAround()
+
         loginButton.layer.cornerRadius = 4
         
         let currentUser = PFUser.current()
@@ -48,8 +49,7 @@ class LoginViewController: UIViewController {
         PFUser.logInWithUsername(inBackground: email, password: password) { (user: PFUser?, error: Error?) in
             if error == nil{
                 let instagramVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBarVC") as! UITabBarController
-                
-                self.present(instagramVC, animated: true, completion: nil)
+                    self.present(instagramVC, animated: false, completion: nil)
             }else{
                 print(error!.localizedDescription)
             }
