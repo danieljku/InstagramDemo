@@ -7,5 +7,6 @@ target 'InstagramDemo' do
 
   # Pods for InstagramDemo
   pod 'Parse'
+  pod 'MBProgressHUD'
 
 end

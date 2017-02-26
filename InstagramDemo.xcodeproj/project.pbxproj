@@ -79,7 +79,6 @@
 		122744451E605217005C0635 /* InstagramDemo */ = {
 			isa = PBXGroup;
 			children = (
-				12E2715F1E612A08003725C2 /* API */,
 				12E2715E1E6129FD003725C2 /* Models */,
 				12E2715D1E6129F5003725C2 /* Helpers */,
 				12E2715C1E6129EE003725C2 /* Views */,
@@ -129,13 +128,6 @@
 				12E271641E61811C003725C2 /* Post.swift */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		12E2715F1E612A08003725C2 /* API */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = API;
 			sourceTree = "<group>";
 		};
 		5DC270D1A4B77E626EE1C866 /* Pods */ = {

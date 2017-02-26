@@ -14,6 +14,7 @@ class PostsTableViewCell: UITableViewCell {
     @IBOutlet weak var postImage: UIImageView!
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var caption: UILabel!
+    @IBOutlet weak var captionName: UILabel!
 
     var post: PFObject!{
         didSet{
@@ -26,7 +27,8 @@ class PostsTableViewCell: UITableViewCell {
                 })
             }
             let user = post["author"] as! PFObject
-            username.text = user["nickname"] as? String
+            let username = user["nickname"] as? String
+            self.username.text = username
             
             if let profilePic = user.value(forKey: "profile_photo")! as? PFFile {
                 profilePic.getDataInBackground(block: { (imageData: Data?, error: Error?) in
@@ -37,8 +39,10 @@ class PostsTableViewCell: UITableViewCell {
                     }
                 })
             }
+
             
-            caption.text = post["caption"] as? String
+            self.captionName.text = username
+            self.caption.text = post["caption"] as? String
         }
     }
     
@@ -55,4 +59,13 @@ class PostsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+extension NSMutableAttributedString {
+    func bold(_ text:String) -> NSMutableAttributedString {
+        let attrs:[String:AnyObject] = [NSFontAttributeName : UIFont(name: "AvenirNext-Medium", size: 12)!]
+        let boldString = NSMutableAttributedString(string:"\(text)", attributes:attrs)
+        self.append(boldString)
+        return self
+    }
 }

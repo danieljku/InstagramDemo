@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class CaptionViewController: UIViewController {
     @IBOutlet weak var imagePost: UIImageView!
@@ -14,7 +15,6 @@ class CaptionViewController: UIViewController {
 
     let post = Post()
     var imageToPost: UIImage?
-    let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +38,7 @@ class CaptionViewController: UIViewController {
     }
     
     @IBAction func onFinish(_ sender: Any) {
-        activityView.center = self.view.center
-        activityView.startAnimating()
-        self.view.addSubview(activityView)
+        MBProgressHUD.showAdded(to: self.view, animated: true)
 
         if let caption = caption.text{
             if let image = imageToPost{
@@ -49,7 +47,7 @@ class CaptionViewController: UIViewController {
                         self.dismiss(animated: true, completion: {
                             let homeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBarVC") as! UITabBarController
                             self.present(homeVC, animated: false, completion: nil)
-                            self.activityView.stopAnimating()
+                            MBProgressHUD.hide(for: self.view, animated: true)
                         })
                     }else{
                         print(error!.localizedDescription)
